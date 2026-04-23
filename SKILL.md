@@ -63,6 +63,22 @@ Do not narrate the reasoning process.
 
 For long papers, inspect sections in chunks when helpful, but do not force a multi-pass ritual if it does not improve the review.
 
+## Bundled resources
+
+Use `references/review-rubric.md` when a compact review checklist would help structure coverage, especially for long manuscripts or broad proofreading requests.
+
+Use `scripts/proofing_scan.py` for the mandatory micro-proofing pattern scan when code execution is available. The script accepts PDFs and text-like manuscript files, including `.txt`, `.tex`, and extracted manuscript text.
+
+Example command:
+
+- `python scripts/proofing_scan.py <path-to-pdf-or-text> --max-hits 80`
+
+The proofing scan depends on `pypdf` only when scanning PDFs. If the script reports a missing dependency, install the skill dependencies from the skill directory:
+
+- `python -m pip install -r requirements.txt`
+
+Treat script output as candidates, not final findings. Spot-check each hit against the manuscript before including it in the review.
+
 ## Technical audit
 
 ### Notation/terminology drift check (required)
@@ -70,8 +86,8 @@ For long papers, inspect sections in chunks when helpful, but do not force a mul
 For frequently used symbols (especially subscripted/superscripted angles, radii, and frame labels), record:
 
 - where the symbol is first defined
-- the **verbal descriptor** attached to it (e.g., “final polar angle at the source radius”)
-- any later descriptor variants (e.g., “initial inclination”) and whether they conflict
+- the **verbal descriptor** attached to it (e.g., "final polar angle at the source radius")
+- any later descriptor variants (e.g., "initial inclination") and whether they conflict
 
 Flag conflicts where the same symbol is described with inconsistent temporal/role adjectives (initial/final, source/observer, emission/reception) even if the equations are otherwise correct. These often indicate a real conceptual bug or an implementation-facing ambiguity.
 
@@ -158,15 +174,11 @@ Do a quick, mechanical scan for high-yield, high-confidence defects and include 
 
 - duplicated punctuation and spacing artifacts: `, ,`, `,,`, `..`, `" , ,`, `" ,` variants
 - semicolon capitalization anomalies: `;` followed by a capital letter where the second clause is not a new sentence/proper noun
-- malformed equation-adjacent grammar frames (common in derivations): `into … into …`, `with … into …`, “plugging … into together …`
+- malformed equation-adjacent grammar frames (common in derivations): `into ... into ...`, `with ... into ...`, `plugging ... into together ...`
 - programming/product-name capitalization: JavaScript, iOS, iPhone, etc.
 - quadrant/branch ambiguity patterns, especially `arctan(x/y)`-style expressions that should be `atan2(y,x)` or require an explicit branch convention
 
-If code execution is available, prefer running `scripts/proofing_scan.py` (below) and then spot-check the top hits.
-
-Example command:
-
-- `python scripts/proofing_scan.py <path-to-pdf-or-text> --max-hits 80`
+If code execution is available, prefer running `scripts/proofing_scan.py` and then spot-check the top hits.
 
 Use the returned hits as candidates for the proofing-sweep subsection, and spot-check each before presenting it as an issue.
 
