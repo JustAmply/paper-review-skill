@@ -1,0 +1,4 @@
+interface:
+  display_name: "Paper Review"
+  short_description: "Review technical manuscripts for concrete issues"
+  default_prompt: "Use $paper-review to review this manuscript for technical correctness, unsupported claims, and high-confidence writing issues."
