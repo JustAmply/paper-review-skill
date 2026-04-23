@@ -27,10 +27,16 @@ import re
 from pathlib import Path
 from typing import List, Tuple
 
-from pypdf import PdfReader
-
 
 def _read_pdf_pages(pdf_path: Path) -> List[str]:
+    try:
+        from pypdf import PdfReader
+    except ImportError as exc:
+        raise SystemExit(
+            "Missing dependency: pypdf. Install skill dependencies with: "
+            "python -m pip install -r requirements.txt"
+        ) from exc
+
     reader = PdfReader(str(pdf_path))
     pages = []
     for p in reader.pages:
@@ -83,6 +89,9 @@ def main() -> None:
         help="Cap total hits across all rules",
     )
     args = ap.parse_args()
+
+    if args.max_hits < 1:
+        raise SystemExit("--max-hits must be at least 1")
 
     path = Path(args.path)
     if not path.exists():
