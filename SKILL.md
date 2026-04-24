@@ -1,6 +1,6 @@
 ---
 name: paper-review
-description: review scientific and technical manuscripts, especially latex drafts, for mathematical errors, scientific inconsistencies, unsupported claims, implementation ambiguity, factual problems, and important writing issues. use when the user asks to proofread a paper, review a manuscript, check equations or derivations, audit appendix formulas or notation, flag typos or grammar issues, or generate or update a latex review file with concrete fixes.
+description: Use when reviewing scientific or technical manuscripts, especially LaTeX drafts, for mathematical errors, scientific inconsistencies, unsupported claims, implementation ambiguity, factual problems, typos, grammar issues, or concrete LaTeX review-file updates.
 ---
 
 # Overview
@@ -11,7 +11,7 @@ Use this skill to produce one compileable LaTeX review file that improves scient
 
 1. Read the full manuscript before writing findings.
 2. Use extra thinking by default.
-3. Write one standalone LaTeX review file to `paper-reviews/review-YYYY-MM-DD-HHMMSS.tex`, unless the user gives a different path.
+3. Write one standalone LaTeX review file to `paper-reviews/review-YYYY-MM-DD-HHMMSS.tex`, unless the user gives a different path. Create the output directory if it does not exist.
 4. Keep the file compileable with minimal LaTeX scaffolding.
 5. Focus on concrete issues and fixes, not generic reviewer prose.
 6. Do not require a fixed review template or section layout unless the user asks for one.
@@ -193,7 +193,7 @@ If yes, include the best few findings instead of omitting them.
 
 ## Output contract
 
-Write LaTeX only.
+The review file content should be LaTeX only.
 
 Do not force a rigid section structure.
 
