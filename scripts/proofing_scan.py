@@ -14,9 +14,11 @@ Usage:
 Output:
   One line per hit:
     [RULE_ID] p<page>: <snippet>
+    [RULE_ID] l<line>: <snippet>
 
 Notes:
 - Page numbers are 1-indexed.
+- Text and LaTeX line numbers are 1-indexed.
 - Snippets are best-effort and may include line breaks collapsed to spaces.
 """
 
@@ -28,7 +30,10 @@ from pathlib import Path
 from typing import List, Tuple
 
 
-def _read_pdf_pages(pdf_path: Path) -> List[str]:
+SourceChunk = Tuple[str, str]
+
+
+def _read_pdf_pages(pdf_path: Path) -> List[SourceChunk]:
     try:
         from pypdf import PdfReader
     except ImportError as exc:
@@ -39,20 +44,23 @@ def _read_pdf_pages(pdf_path: Path) -> List[str]:
 
     reader = PdfReader(str(pdf_path))
     pages = []
-    for p in reader.pages:
+    for i, p in enumerate(reader.pages, start=1):
         try:
             txt = p.extract_text() or ""
         except Exception:
             txt = ""
         txt = re.sub(r"\s+", " ", txt).strip()
-        pages.append(txt)
+        pages.append((f"p{i}", txt))
     return pages
 
 
-def _read_text_as_single_page(path: Path) -> List[str]:
-    txt = path.read_text(errors="ignore")
-    txt = re.sub(r"\s+", " ", txt).strip()
-    return [txt]
+def _read_text_lines(path: Path) -> List[SourceChunk]:
+    chunks: List[SourceChunk] = []
+    for line_no, line in enumerate(path.read_text(errors="ignore").splitlines(), start=1):
+        txt = re.sub(r"\s+", " ", line).strip()
+        if txt:
+            chunks.append((f"l{line_no}", txt))
+    return chunks
 
 
 def _snip(text: str, start: int, end: int, window: int = 60) -> str:
@@ -62,18 +70,23 @@ def _snip(text: str, start: int, end: int, window: int = 60) -> str:
     return snippet.strip()
 
 
+def _mask_inline_code(text: str) -> str:
+    return re.sub(r"`[^`]*`", lambda m: "X" * (m.end() - m.start()), text)
+
+
 def _find_regex(
     rule_id: str,
     pattern: re.Pattern,
-    pages: List[str],
+    chunks: List[SourceChunk],
     max_hits: int,
-) -> List[Tuple[str, int, str]]:
-    hits: List[Tuple[str, int, str]] = []
-    for i, page_text in enumerate(pages, start=1):
-        if not page_text:
+) -> List[Tuple[str, str, str]]:
+    hits: List[Tuple[str, str, str]] = []
+    for location, text in chunks:
+        if not text:
             continue
-        for m in pattern.finditer(page_text):
-            hits.append((rule_id, i, _snip(page_text, m.start(), m.end())))
+        scan_text = _mask_inline_code(text)
+        for m in pattern.finditer(scan_text):
+            hits.append((rule_id, location, _snip(text, m.start(), m.end())))
             if len(hits) >= max_hits:
                 return hits
     return hits
@@ -98,13 +111,13 @@ def main() -> None:
         raise SystemExit(f"File not found: {path}")
 
     if path.suffix.lower() == ".pdf":
-        pages = _read_pdf_pages(path)
+        chunks = _read_pdf_pages(path)
     else:
-        pages = _read_text_as_single_page(path)
+        chunks = _read_text_lines(path)
 
     rules: List[Tuple[str, re.Pattern]] = [
         ("PUNC_DOUBLE_COMMA", re.compile(r",\s*,")),
-        ("PUNC_DOUBLE_PERIOD", re.compile(r"\.\s*\.")),
+        ("PUNC_DOUBLE_PERIOD", re.compile(r"(?<!\.)\.\s*\.(?!\.)")),
         ("PUNC_QUOTE_DOUBLE_COMMA", re.compile(r"\"\s*,\s*,")),
         ("SEMICOLON_CAP", re.compile(r";\s+[A-Z]")),
         ("FRAME_INTO_INTO", re.compile(r"\binto\b.{0,80}?\binto\b", re.IGNORECASE)),
@@ -125,11 +138,11 @@ def main() -> None:
     ]
 
     remaining = args.max_hits
-    out: List[Tuple[str, int, str]] = []
+    out: List[Tuple[str, str, str]] = []
     for rule_id, pat in rules:
         if remaining <= 0:
             break
-        hits = _find_regex(rule_id, pat, pages, remaining)
+        hits = _find_regex(rule_id, pat, chunks, remaining)
         out.extend(hits)
         remaining = args.max_hits - len(out)
 
@@ -137,8 +150,8 @@ def main() -> None:
         print("[OK] No high-confidence pattern-scan hits found.")
         return
 
-    for rule_id, page, snippet in out:
-        print(f"[{rule_id}] p{page}: {snippet}")
+    for rule_id, location, snippet in out:
+        print(f"[{rule_id}] {location}: {snippet}")
 
 
 if __name__ == "__main__":
