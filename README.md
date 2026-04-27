@@ -21,14 +21,7 @@ New-Item -ItemType Junction `
   -Target "$PWD\paper-review"
 ```
 
-### macOS
-
-```bash
-mkdir -p "$HOME/.codex/skills"
-ln -s "$PWD/paper-review" "$HOME/.codex/skills/paper-review"
-```
-
-### Linux
+### macOS and Linux
 
 ```bash
 mkdir -p "$HOME/.codex/skills"
