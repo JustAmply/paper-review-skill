@@ -11,24 +11,31 @@ The skill lives in [`paper-review/`](paper-review/) and is defined by [`paper-re
 
 ## Install Locally
 
-Link the actual skill directory into your Codex skills folder:
+Preferred: ask Codex or another local agent to install the skill for you:
 
-### Windows
-
-```powershell
-New-Item -ItemType Junction `
-  -Path "$env:USERPROFILE\.codex\skills\paper-review" `
-  -Target "$PWD\paper-review"
+```text
+Install the Codex skill from https://github.com/JustAmply/paper-review-skill by copying the paper-review directory into my Codex skills folder as paper-review.
 ```
 
-### macOS and Linux
+### Manual Fallback
+
+Copy the actual skill directory into your Codex skills folder:
+
+#### Windows
+
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.codex\skills" | Out-Null
+Copy-Item -Recurse -Force ".\paper-review" "$env:USERPROFILE\.codex\skills\paper-review"
+```
+
+#### macOS and Linux
 
 ```bash
 mkdir -p "$HOME/.codex/skills"
-ln -s "$PWD/paper-review" "$HOME/.codex/skills/paper-review"
+cp -R "./paper-review" "$HOME/.codex/skills/paper-review"
 ```
 
-If a previous link already exists, remove that link first and recreate it with the target above for your operating system.
+If a previous copy already exists, these commands overwrite files with the same names.
 
 ## Requirements
 
