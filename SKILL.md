@@ -1,11 +1,11 @@
 ---
 name: paper-review
-description: Use when reviewing scientific or technical manuscripts, especially LaTeX drafts, for mathematical errors, scientific inconsistencies, unsupported claims, implementation ambiguity, factual problems, typos, grammar issues, or concrete LaTeX review-file updates.
+description: Use when reviewing scientific or technical manuscripts, papers, theses, master's theses, dissertations, LaTeX drafts, thesis chapters, or final submission drafts for scientific correctness, structure, methodology, claim support, reproducibility, notation, citations, writing quality, and concrete revision planning.
 ---
 
 # Overview
 
-Use this skill to produce one compileable LaTeX review file that improves scientific quality first and writing quality second.
+Use this skill to produce one compileable LaTeX review file that improves scientific quality first, thesis or paper structure second, and writing quality third.
 
 ## Default behavior
 
@@ -16,6 +16,20 @@ Use this skill to produce one compileable LaTeX review file that improves scient
 5. Focus on concrete issues and fixes, not generic reviewer prose.
 6. Do not require a fixed review template or section layout unless the user asks for one.
 7. Treat `proofread`, `flag typos`, `grammar`, `writing quality`, and similar wording as a request to spend more budget on the editorial sweep after the technical audit.
+8. Treat `thesis`, `master's thesis`, `dissertation`, `chapter`, `final submission`, `defense`, `advisor feedback`, and similar wording as a request to apply the thesis-specific checks in `references/thesis-rubric.md`.
+
+## Review modes
+
+Choose the narrowest mode that fits the user request:
+
+- **Paper review:** audit a paper or article for technical correctness, claim support, notation, evidence, and concise reviewer-style findings.
+- **Thesis-wide review:** audit a full thesis for research question clarity, contribution, chapter structure, methodology, literature synthesis, evaluation, discussion, conclusion alignment, and revision priorities.
+- **Chapter review:** audit one thesis chapter for local argument flow, missing definitions, unsupported claims, citation gaps, transitions, and consistency with the stated thesis goals.
+- **Methodology/evaluation audit:** audit methods, experiments, datasets, parameters, metrics, baselines, statistical claims, reproducibility, and implementation details.
+- **Final submission review:** audit title, abstract, introduction, research questions, figures, tables, captions, citations, references, appendices, placeholders, formatting hazards, and final must-fix items.
+- **Advisor feedback integration:** convert supervisor, advisor, examiner, or review feedback into concrete chapter-level edits, identify ambiguous or conflicting feedback, and list clarification questions.
+
+For thesis-related modes, read `references/thesis-rubric.md` when it would improve coverage.
 
 ## Primary objective
 
@@ -24,8 +38,9 @@ Prioritize technical correctness over prose quality.
 If attention is limited, spend it in this order:
 
 1. equations, derivations, notation, units, definitions, and algorithmic correctness
-2. consistency between claims, evidence, figures, tables, captions, and conclusions
-3. editorial quality, with special attention to high-confidence issues that are cheap to verify and fix
+2. research question, contribution, methodology, evaluation validity, reproducibility, and claim support
+3. consistency between claims, evidence, figures, tables, captions, appendices, abstract, introduction, discussion, and conclusions
+4. editorial quality, with special attention to high-confidence issues that are cheap to verify and fix
 
 Do not let editorial findings crowd out technical findings.
 
@@ -56,16 +71,19 @@ Do not narrate the reasoning process.
    - implementation-facing expressions
 3. Perform a technical audit first.
 4. Re-check the highest-risk technical findings.
-5. Perform a bounded editorial pass after the technical audit.
-6. If code execution is available, run `scripts/proofing_scan.py` (or otherwise do the manual pattern scan described below) to catch high-confidence copy/notation defects that are easy to miss.
-7. Perform one short final proofing sweep for obvious, high-confidence editorial issues that are cheap to verify.
-8. Write the review file.
+5. For theses, audit research question alignment, chapter-to-chapter coherence, methodology, literature synthesis, evaluation, discussion, limitations, and conclusion alignment.
+6. Perform a bounded editorial pass after the technical and structural audit.
+7. If code execution is available, run `scripts/proofing_scan.py` (or otherwise do the manual pattern scan described below) to catch high-confidence copy/notation defects that are easy to miss.
+8. Perform one short final proofing sweep for obvious, high-confidence editorial issues that are cheap to verify.
+9. Write the review file.
 
 For long papers, inspect sections in chunks when helpful, but do not force a multi-pass ritual if it does not improve the review.
 
 ## Bundled resources
 
 Use `references/review-rubric.md` when a compact review checklist would help structure coverage, especially for long manuscripts or broad proofreading requests.
+
+Use `references/thesis-rubric.md` for master's theses, dissertations, thesis chapters, final submission checks, methodology/evaluation audits, or advisor feedback integration.
 
 Use `scripts/proofing_scan.py` for the mandatory micro-proofing pattern scan when code execution is available. The script accepts PDFs and text-like manuscript files, including `.txt`, `.tex`, and extracted manuscript text.
 
@@ -107,6 +125,18 @@ Explicitly check for:
 - mismatch between a mathematical definition and an appendix or code-facing formula
 - missing assumptions, qualifiers, or uncertainty that materially affect interpretation
 - factual statements that appear unsupported or likely incorrect
+
+For thesis work, also explicitly check for:
+
+- unclear or drifting research questions
+- stated contributions that do not match the actual results
+- chapter order or transitions that obscure the argument
+- literature review sections that list prior work without synthesizing it
+- methods that are insufficiently justified for the research question
+- missing reproducibility details such as datasets, preprocessing, parameters, random seeds, software versions, hardware, prompts, or evaluation scripts
+- baselines, ablations, metrics, or comparisons that are missing, unfair, or not explained
+- limitations that are missing, understated, or disconnected from the evidence
+- abstract, introduction, discussion, and conclusion statements that disagree with each other
 
 When judging technical content, distinguish clearly between:
 
@@ -204,6 +234,7 @@ Structure the review in whatever way is clearest and most compact, but make sure
 - any meaningful editorial findings
 - a short proofing-sweep subsection when there are obvious high-confidence copyediting defects worth fixing
 - the highest-priority fixes
+- a prioritized revision plan when reviewing a thesis, thesis chapter, final submission draft, or advisor feedback
 - any items that need external verification
 
 For each technical finding, include:
@@ -226,6 +257,12 @@ For proofing-sweep items, a compact bullet list is acceptable if each bullet inc
 - location
 - problem
 - suggested fix
+
+For thesis revision plans, group action items into:
+
+- **Must fix:** issues that could materially affect correctness, grade, examiner confidence, reproducibility, or the central argument
+- **Should fix:** issues that would noticeably improve clarity, completeness, or professionalism
+- **Nice to fix:** low-risk polish that can wait until higher-priority issues are resolved
 
 Put technical and factual issues before prose issues unless the user explicitly asks for a prose-first review.
 

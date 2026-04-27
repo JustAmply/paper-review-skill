@@ -7,6 +7,8 @@ Goal: catch *high-confidence* defects that are easy to miss in a manual pass:
 - equation-adjacent malformed frames ("into ... into ...", "plugging ... into together")
 - common product/language capitalization (javascript/iOS/iPhone)
 - arctan(x/y) quadrant ambiguity patterns
+- thesis/LaTeX finalization hazards (TODO/FIXME/TBD/XXX, empty refs/cites,
+  unresolved "??" references, repeated words)
 
 Usage:
   python scripts/proofing_scan.py <path-to-pdf-or-text> [--max-hits 80]
@@ -71,7 +73,7 @@ def _snip(text: str, start: int, end: int, window: int = 60) -> str:
 
 
 def _mask_inline_code(text: str) -> str:
-    return re.sub(r"`[^`]*`", lambda m: "X" * (m.end() - m.start()), text)
+    return re.sub(r"`[^`]*`", lambda m: "M" * (m.end() - m.start()), text)
 
 
 def _find_regex(
@@ -134,6 +136,14 @@ def main() -> None:
                 r"\barctan\s*\(\s*[^()]{0,40}?/[^()]{0,40}?\)",
                 re.IGNORECASE,
             ),
+        ),
+        ("DRAFT_MARKER", re.compile(r"\\todo\b|\b(?:TODO|FIXME|TBD|XXX)\b")),
+        ("EMPTY_CITE", re.compile(r"\\(?:cite|citet|citep|autocite)\s*\{\s*\}")),
+        ("EMPTY_REF", re.compile(r"\\(?:ref|eqref|autoref|cref|Cref)\s*\{\s*\}")),
+        ("UNRESOLVED_REF_MARKER", re.compile(r"(?<!\?)\?\?(?!\?)")),
+        (
+            "REPEATED_WORD",
+            re.compile(r"\b([A-Za-z]{3,})\s+\1\b", re.IGNORECASE),
         ),
     ]
 
