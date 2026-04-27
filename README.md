@@ -1,6 +1,6 @@
 # Paper Review Skill
 
-This repository contains a Codex skill for reviewing scientific and technical manuscripts, papers, theses, dissertation chapters, and final submission drafts.
+This repository contains an agent skill for reviewing scientific and technical manuscripts, papers, theses, dissertation chapters, and final submission drafts.
 
 The skill lives in [`paper-review/`](paper-review/) and is defined by [`paper-review/SKILL.md`](paper-review/SKILL.md). It includes:
 
@@ -11,15 +11,15 @@ The skill lives in [`paper-review/`](paper-review/) and is defined by [`paper-re
 
 ## Install Locally
 
-Preferred: ask Codex or another local agent to install the skill for you:
+Preferred: ask your local agent to install the skill for you:
 
 ```text
-Install the Codex skill from https://github.com/JustAmply/paper-review-skill by copying the paper-review directory into my Codex skills folder as paper-review.
+Install the paper-review skill from https://github.com/JustAmply/paper-review-skill by copying the paper-review directory into my local agent skills folder as paper-review.
 ```
 
 ### Manual Fallback
 
-Copy the actual skill directory into your Codex skills folder:
+The commands below install the skill for Codex specifically by copying the actual skill directory into the Codex skills folder.
 
 #### Windows
 
@@ -47,4 +47,4 @@ python -m pip install -r paper-review\requirements.txt
 
 ## Usage
 
-Once installed, ask Codex to review a manuscript, paper, thesis, thesis chapter, or final submission draft. The skill writes a timestamped LaTeX review file by default under `paper-reviews/`.
+Once installed, ask your agent to review a manuscript, paper, thesis, thesis chapter, or final submission draft. The skill writes a timestamped LaTeX review file by default under `paper-reviews/`.
