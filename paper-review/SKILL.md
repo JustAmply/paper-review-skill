@@ -83,7 +83,7 @@ For long papers, inspect sections in chunks when helpful, but do not force a mul
 
 Use `references/review-rubric.md` when a compact review checklist would help structure coverage, especially for long manuscripts or broad proofreading requests.
 
-Use `references/thesis-rubric.md` for master's theses, dissertations, thesis chapters, final submission checks, methodology/evaluation audits, or advisor feedback integration.
+Use `references/thesis-rubric.md` for master's theses, dissertations, thesis chapters, final submission checks, thesis-related methodology/evaluation audits, or advisor feedback integration.
 
 Use `scripts/proofing_scan.py` for the mandatory micro-proofing pattern scan when code execution is available. The script accepts PDFs and text-like manuscript files, including `.txt`, `.tex`, and extracted manuscript text.
 
@@ -200,11 +200,11 @@ Cap bounded proofing issues at a small number unless the user explicitly asks fo
 
 ### Mandatory micro-proofing pattern scan (required)
 
-Do a quick, mechanical scan for high-yield, high-confidence defects and include any hits as proofing-sweep items:
+Do a quick, mechanical scan for high-yield, high-confidence defects and include any verified hits as proofing-sweep items:
 
 - duplicated punctuation and spacing artifacts: `, ,`, `,,`, `..`, `" , ,`, `" ,` variants
 - semicolon capitalization anomalies: `;` followed by a capital letter where the second clause is not a new sentence/proper noun
-- malformed equation-adjacent grammar frames (common in derivations): `into ... into ...`, `with ... into ...`, `plugging ... into together ...`
+- malformed equation-adjacent grammar frames (common in derivations): `into ... into ...`, `plugging ... into together ...`
 - programming/product-name capitalization: JavaScript, iOS, iPhone, etc.
 - quadrant/branch ambiguity patterns, especially `arctan(x/y)`-style expressions that should be `atan2(y,x)` or require an explicit branch convention
 
@@ -296,7 +296,3 @@ Create a new timestamped review file by default.
 Only update an existing review file if the user explicitly asks.
 
 Compilation of the review into PDF is not required unless the user asks for it or it is needed to validate that the LaTeX is compileable.
-
-## References
-
-Use `references/review-rubric.md` if it provides a useful review checklist.

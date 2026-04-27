@@ -25,17 +25,18 @@ The commands below install the skill for Codex specifically by copying the actua
 
 ```powershell
 New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.codex\skills" | Out-Null
-Copy-Item -Recurse -Force ".\paper-review" "$env:USERPROFILE\.codex\skills\paper-review"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.codex\skills\paper-review" | Out-Null
+Copy-Item -Recurse -Force ".\paper-review\*" "$env:USERPROFILE\.codex\skills\paper-review"
 ```
 
 #### macOS and Linux
 
 ```bash
-mkdir -p "$HOME/.codex/skills"
-cp -R "./paper-review" "$HOME/.codex/skills/paper-review"
+mkdir -p "$HOME/.codex/skills/paper-review"
+cp -R "./paper-review/." "$HOME/.codex/skills/paper-review/"
 ```
 
-If a previous copy already exists, these commands overwrite files with the same names.
+If a previous copy already exists, these commands refresh files with the same names in place.
 
 ## Requirements
 
