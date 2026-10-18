@@ -29,13 +29,11 @@ from __future__ import annotations
 import argparse
 import re
 from pathlib import Path
-from typing import List, Tuple
+
+type SourceChunk = tuple[str, str]
 
 
-SourceChunk = Tuple[str, str]
-
-
-def _read_pdf_pages(pdf_path: Path) -> List[SourceChunk]:
+def _read_pdf_pages(pdf_path: Path) -> list[SourceChunk]:
     try:
         from pypdf import PdfReader
     except ImportError as exc:
@@ -56,8 +54,8 @@ def _read_pdf_pages(pdf_path: Path) -> List[SourceChunk]:
     return pages
 
 
-def _read_text_lines(path: Path) -> List[SourceChunk]:
-    chunks: List[SourceChunk] = []
+def _read_text_lines(path: Path) -> list[SourceChunk]:
+    chunks: list[SourceChunk] = []
     for line_no, line in enumerate(path.read_text(errors="ignore").splitlines(), start=1):
         txt = re.sub(r"\s+", " ", line).strip()
         if txt:
@@ -79,10 +77,10 @@ def _mask_inline_code(text: str) -> str:
 def _find_regex(
     rule_id: str,
     pattern: re.Pattern,
-    chunks: List[SourceChunk],
+    chunks: list[SourceChunk],
     max_hits: int,
-) -> List[Tuple[str, str, str]]:
-    hits: List[Tuple[str, str, str]] = []
+) -> list[tuple[str, str, str]]:
+    hits: list[tuple[str, str, str]] = []
     for location, text in chunks:
         if not text:
             continue
@@ -117,7 +115,7 @@ def main() -> None:
     else:
         chunks = _read_text_lines(path)
 
-    rules: List[Tuple[str, re.Pattern]] = [
+    rules: list[tuple[str, re.Pattern]] = [
         ("PUNC_DOUBLE_COMMA", re.compile(r",\s*,")),
         ("PUNC_DOUBLE_PERIOD", re.compile(r"(?<!\.)\.\s*\.(?!\.)")),
         ("PUNC_QUOTE_DOUBLE_COMMA", re.compile(r"\"\s*,\s*,")),
@@ -148,7 +146,7 @@ def main() -> None:
     ]
 
     remaining = args.max_hits
-    out: List[Tuple[str, str, str]] = []
+    out: list[tuple[str, str, str]] = []
     for rule_id, pat in rules:
         if remaining <= 0:
             break
